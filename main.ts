@@ -5,10 +5,14 @@
 // Run: MAKEFUN_OUTPUT_DIR=out node main.ts
 // (In the grader, MAKEFUN_OUTPUT_DIR is unset and /output is used.)
 import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-app.ts';
 
-const repoDir = process.cwd();
+// The repo dir is where this file lives, not the working directory: the
+// grader runs `node /bot/main.ts` from its own cwd, so process.cwd() is
+// not the repo and the copy below would fail with ENOENT (exit 1).
+const repoDir = dirname(fileURLToPath(import.meta.url));
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
 rmSync(outDir, { recursive: true, force: true });
